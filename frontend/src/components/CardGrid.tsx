@@ -1,7 +1,9 @@
 import { CardGridProps } from "@/types/CardGridProps";
+import { CardProps } from "@/types/CardProps";
 import React, { useEffect, useState } from "react";
 import DraggableCard from "./DraggableCard";
 import DroppableArea from "./DroppableArea";
+import Modal from "./Modal";
 
 const CardGrid: React.FC<CardGridProps> = ({ cards }: CardGridProps) => {
   const [cardOrder, setCardOrder] = useState(cards.map((card) => card.id));
@@ -21,13 +23,29 @@ const CardGrid: React.FC<CardGridProps> = ({ cards }: CardGridProps) => {
     }
   };
 
+  const [selectedCard, setSelectedCard] = useState<CardProps | null>(null);
+  const [isOverlayOpen, setIsOverlayOpen] = useState(false);
+
+  const handleCardClick = (cardId: number) => {
+    const card = cards.find((card) => card.id === cardId);
+    if (card) {
+      setSelectedCard(card);
+      setIsOverlayOpen(true);
+    }
+  };
+
   const renderCards = () => {
     return cardOrder.map((cardId, index) => {
       const card = cards.find((card) => card.id === cardId);
       return (
         <DroppableArea key={cardId} index={index} moveCard={moveCard}>
           {card && (
-            <DraggableCard key={card.id} id={card.id} title={card.title} />
+            <DraggableCard
+              key={card.id}
+              id={card.id}
+              title={card.title}
+              onClick={handleCardClick}
+            />
           )}
         </DroppableArea>
       );
@@ -35,7 +53,18 @@ const CardGrid: React.FC<CardGridProps> = ({ cards }: CardGridProps) => {
   };
 
   return (
-    <div className="card-grid grid grid-cols-3 gap-2 px-4">{renderCards()}</div>
+    <div className="px-4">
+      <div className="card-grid grid grid-cols-3 gap-2">{renderCards()}</div>
+      {isOverlayOpen && (
+        <Modal
+          isOpen={isOverlayOpen}
+          card={selectedCard}
+          handleClose={() => setIsOverlayOpen(false)}
+        >
+          <div></div>
+        </Modal>
+      )}
+    </div>
   );
 };
 

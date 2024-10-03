@@ -1,13 +1,14 @@
-import { DraggableCardProps } from "@/types/DraggableCardProps";
+import { CardProps } from "@/types/CardProps";
 import React, { useEffect, useState } from "react";
 import { useDrag } from "react-dnd";
 import Skeleton, { SkeletonTheme } from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
 
-const DraggableCard: React.FC<DraggableCardProps> = ({
+const DraggableCard: React.FC<CardProps> = ({
   id,
   title,
-}: DraggableCardProps) => {
+  onClick,
+}: CardProps) => {
   const [{ isDragging }, drag] = useDrag(() => ({
     type: "card",
     item: { id },
@@ -40,7 +41,10 @@ const DraggableCard: React.FC<DraggableCardProps> = ({
   }, [src]);
 
   return drag(
-    <div className={`card ${isDragging ? "dragging" : ""}`}>
+    <div
+      className={`card ${isDragging ? "dragging" : ""}`}
+      onClick={() => onClick(id)}
+    >
       <h2>{title}</h2>
       <div>
         {isLoading ? (

@@ -1,4 +1,4 @@
-import { DraggableCardProps } from "@/types/DraggableCardProps";
+import { CardProps } from "@/types/CardProps";
 import { DroppableAreaProps } from "@/types/DroppableAreaProps";
 import React from "react";
 import { useDrop } from "react-dnd";
@@ -10,7 +10,7 @@ const DroppableArea: React.FC<DroppableAreaProps> = ({
 }) => {
   const [{ isOver }, drop] = useDrop({
     accept: "card",
-    drop: (item: DraggableCardProps) => {
+    drop: (item: CardProps) => {
       moveCard(item.id, index);
     },
     collect: (monitor) => ({
