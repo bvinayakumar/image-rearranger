@@ -1,5 +1,5 @@
-import { CardProps } from "./DraggableCardProps";
+import { DraggableCardProps } from "./DraggableCardProps";
 
 export interface CardGridProps {
-  cards: CardProps[];
+  cards: DraggableCardProps[];
 }
