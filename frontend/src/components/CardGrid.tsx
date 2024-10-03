@@ -26,7 +26,9 @@ const CardGrid: React.FC<CardGridProps> = ({ cards }: CardGridProps) => {
       const card = cards.find((card) => card.id === cardId);
       return (
         <DroppableArea key={cardId} index={index} moveCard={moveCard}>
-          <DraggableCard key={card.id} id={card.id} title={card.title} />
+          {card && (
+            <DraggableCard key={card.id} id={card.id} title={card.title} />
+          )}
         </DroppableArea>
       );
     });
