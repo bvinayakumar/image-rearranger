@@ -37,7 +37,7 @@ def init_db():
 
 def get_db_connection():
     try:
-        return sqlite3.connect("backend.db")
+        return sqlite3.connect(":memory:")
     except Exception as e:
         log.info(f"Failed to connect to database: {e}")
         raise
