@@ -10,6 +10,11 @@ from fastapi import APIRouter
 router = APIRouter()
 
 
+@router.get("/", summary="Health check")
+async def health_check():
+    return SuccessResponse(message="OK")
+
+
 @router.get("/documents", summary="Get all documents")
 async def get_documents():
     try:
