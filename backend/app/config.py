@@ -11,4 +11,6 @@ def get_env_var(key, default_value=None):
 DATABASE_URL = get_env_var("DATABASE_URL")
 DATABASE_NAME = get_env_var("DATABASE_NAME", "backend.db")
 
+ORIGINS = get_env_var("ORIGINS")
+
 PORT = int(get_env_var("PORT", 8000))

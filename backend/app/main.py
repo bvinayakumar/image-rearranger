@@ -1,5 +1,6 @@
 from fastapi import FastAPI
-from config import PORT
+from fastapi.middleware.cors import CORSMiddleware
+from config import ORIGINS, PORT
 from routes.documents import router as documents_router
 from utils.logging import init_logging
 from utils.sqlite_cloud_client import init_db
@@ -8,6 +9,14 @@ app = FastAPI()
 
 init_logging()
 init_db()
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=ORIGINS,
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 app.include_router(documents_router)
 
