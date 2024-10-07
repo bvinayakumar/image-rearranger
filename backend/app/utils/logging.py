@@ -1,6 +1,6 @@
 import logging
 
-from app.config import get_env_var
+from config import get_env_var
 
 
 def init_logging():

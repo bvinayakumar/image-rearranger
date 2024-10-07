@@ -1,10 +1,10 @@
 import traceback
 from typing import List
 
-from app.schemas.document import AddDocumentRequest, Document, UpdateDocumentRequest
-from app.schemas.response import ErrorResponse, SuccessResponse
-from app.utils.logging import log
-from app.utils.sqlite_cloud_client import add_row, get_all_rows, update_rows
+from schemas.document import AddDocumentRequest, Document, UpdateDocumentRequest
+from schemas.response import ErrorResponse, SuccessResponse
+from utils.logging import log
+from utils.sqlite_cloud_client import add_row, get_all_rows, update_rows
 from fastapi import APIRouter
 
 router = APIRouter()

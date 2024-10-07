@@ -1,8 +1,8 @@
 from typing import List
 
 import sqlitecloud
-from app.config import DATABASE_NAME, DATABASE_URL
-from app.utils.logging import log
+from config import DATABASE_NAME, DATABASE_URL
+from utils.logging import log
 
 
 def init_db():
