@@ -5,6 +5,7 @@ from pydantic import BaseModel
 class BaseResponse(BaseModel):
     status: str
     message: Optional[str] = None
+    data: Optional[dict] = None
 
 
 class SuccessResponse(BaseResponse):

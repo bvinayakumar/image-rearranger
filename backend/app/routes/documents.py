@@ -4,7 +4,7 @@ from typing import List
 from app.schemas.document import AddDocumentRequest, Document, UpdateDocumentRequest
 from app.schemas.response import ErrorResponse, SuccessResponse
 from app.utils.logging import log
-from app.utils.sqlite_client import add_row, get_all_rows, update_rows
+from app.utils.sqlite_cloud_client import add_row, get_all_rows, update_rows
 from fastapi import APIRouter
 
 router = APIRouter()
@@ -31,8 +31,10 @@ async def get_documents():
 @router.post("/documents", summary="Add a document")
 async def add_document(body: AddDocumentRequest):
     try:
-        add_row("documents", body.dict())
-        return SuccessResponse(message="Added document successfully")
+        document_id = add_row("documents", body.dict())
+        return Document(
+            id=document_id, type=body.type, title=body.title, position=body.position
+        ).dict()
     except Exception as e:
         log.error(f"Error adding document {e} {traceback.format_exc()}")
         return ErrorResponse(

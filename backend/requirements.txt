@@ -1,1 +1,2 @@
 fastapi[standard]
+sqlitecloud==0.0.83

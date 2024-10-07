@@ -1,7 +1,7 @@
 from fastapi import FastAPI
 from app.routes.documents import router as documents_router
 from app.utils.logging import init_logging
-from app.utils.sqlite_client import init_db
+from app.utils.sqlite_cloud_client import init_db
 
 app = FastAPI()
 

@@ -1,6 +1,7 @@
-import sqlite3
 from typing import List
 
+import sqlitecloud
+from app.config import DATABASE_NAME, DATABASE_URL
 from app.utils.logging import log
 
 
@@ -8,16 +9,15 @@ def init_db():
     connection = get_db_connection()
     cursor = connection.cursor()
 
-    cursor.execute(
-        """
-            CREATE TABLE IF NOT EXISTS documents (
-                id INTEGER PRIMARY KEY AUTOINCREMENT,
-                type TEXT NOT NULL,
-                title TEXT NOT NULL,
-                position INTEGER
-            )
-        """
-    )
+    create_table_stmt = """
+        CREATE TABLE IF NOT EXISTS documents (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            type TEXT NOT NULL,
+            title TEXT NOT NULL,
+            position INTEGER
+        )
+    """
+    cursor.execute(f"USE DATABASE {DATABASE_NAME}; {create_table_stmt}")
     initial_data = [
         (1, "bank-draft", "Bank Draft", 0),
         (2, "bill-of-lading", "Bill of Lading", 1),
@@ -25,10 +25,11 @@ def init_db():
         (4, "bank-draft-2", "Bank Draft 2", 3),
         (5, "bill-of-landing-2", "Bill of Lading 2", 4),
     ]
-    cursor.executemany(
-        "INSERT INTO documents (id, type, title, position) VALUES (?, ?, ?, ?) ON CONFLICT DO NOTHING",
-        initial_data,
-    )
+    for row in initial_data:
+        cursor.execute(
+            f"USE DATABASE {DATABASE_NAME}; INSERT INTO documents (id, type, title, position) VALUES (?,?,?,?) ON CONFLICT DO NOTHING",
+            row,
+        )
 
     cursor.close()
     connection.commit()
@@ -37,7 +38,8 @@ def init_db():
 
 def get_db_connection():
     try:
-        return sqlite3.connect(":memory:")
+        connection = sqlitecloud.connect(DATABASE_URL)
+        return connection
     except Exception as e:
         log.info(f"Failed to connect to database: {e}")
         raise
@@ -48,7 +50,7 @@ def get_all_rows(table_name: str):
         connection = get_db_connection()
         cursor = connection.cursor()
 
-        cursor.execute("SELECT * FROM documents")
+        cursor.execute(f"USE DATABASE {DATABASE_NAME}; SELECT * FROM documents")
         rows = cursor.fetchall()
 
         result = to_json_list(cursor, rows)
@@ -71,14 +73,17 @@ def add_row(table_name: str, data: dict):
         columns = data.keys()
         values = [data[column] for column in columns]
 
-        cursor.execute(
-            f"INSERT INTO {table_name} ({', '.join(columns)}) VALUES ({', '.join('?' * len(values))})",
+        result = cursor.execute(
+            f"USE DATABASE {DATABASE_NAME}; INSERT INTO {table_name} ({', '.join(columns)}) VALUES ({', '.join('?' * len(values))})",
             values,
         )
+        document_id = cursor.lastrowid
 
         cursor.close()
         connection.commit()
         connection.close()
+
+        return document_id
     except Exception as e:
         log.info(f"Failed to add data to {table_name}: {e}")
         raise
@@ -102,7 +107,7 @@ def update_rows(table_name: str, update_data: List[dict]):
             values.append(data["id"])
 
             cursor.execute(
-                f"UPDATE {table_name} SET {', '.join(placeholders)} WHERE id = ?",
+                f"USE DATABASE {DATABASE_NAME}; UPDATE {table_name} SET {', '.join(placeholders)} WHERE id = ?",
                 values,
             )
 
