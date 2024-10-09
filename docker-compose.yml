@@ -1,5 +1,5 @@
 services:
-  python-app:
+  backend-app:
     build: backend
     command: python app/main.py
     environment:
@@ -7,3 +7,10 @@ services:
       ORIGINS: "http://localhost:3000"
     ports:
       - "8000:8000"
+
+  frontend-app:
+    build: frontend
+    environment:
+      NEXT_PUBLIC_API_BASE_URL: "http://localhost:8000"
+    ports:
+      - "3000:3000"
