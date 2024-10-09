@@ -1,12 +1,13 @@
 import { CardGridProps } from "@/types/CardGridProps";
 import { CardProps } from "@/types/CardProps";
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
+import { CardsContext } from "./CardsContext";
 import DraggableCard from "./DraggableCard";
 import DroppableArea from "./DroppableArea";
 import Modal from "./Modal";
 
-const CardGrid: React.FC<CardGridProps> = ({ cards }: CardGridProps) => {
-  const [cardOrder, setCardOrder] = useState(cards.map((card) => card.id));
+const CardGrid: React.FC<CardGridProps> = () => {
+  const { cards, cardOrder, setCardOrder } = useContext(CardsContext);
 
   useEffect(() => {
     // Update cardOrder based on changes in cards
@@ -44,6 +45,7 @@ const CardGrid: React.FC<CardGridProps> = ({ cards }: CardGridProps) => {
               key={card.id}
               id={card.id}
               title={card.title}
+              position={card.position}
               onClick={handleCardClick}
             />
           )}
