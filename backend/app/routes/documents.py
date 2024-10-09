@@ -15,8 +15,18 @@ async def health_check():
     return SuccessResponse(message="OK")
 
 
-@router.get("/documents", summary="Get all documents")
-async def get_documents():
+@router.get(
+    "/documents",
+    summary="List all documents",
+    responses={
+        200: {"model": List[Document], "description": "Successful response"},
+        500: {
+            "model": ErrorResponse,
+            "description": "An unexpected error occurred. Please try again.",
+        },
+    },
+)
+async def list_documents():
     try:
         docs = get_all_rows("documents")
         documents = [Document(**doc) for doc in docs]
@@ -28,7 +38,17 @@ async def get_documents():
         )
 
 
-@router.post("/documents", summary="Add a document")
+@router.post(
+    "/documents",
+    summary="Add a document",
+    responses={
+        200: {"model": Document, "description": "Successful response"},
+        500: {
+            "model": ErrorResponse,
+            "description": "An unexpected error occurred. Please try again.",
+        },
+    },
+)
 async def add_document(body: AddDocumentRequest):
     try:
         document_id = add_row("documents", body.dict())
@@ -42,7 +62,17 @@ async def add_document(body: AddDocumentRequest):
         )
 
 
-@router.patch("/documents", summary="Update documents")
+@router.patch(
+    "/documents",
+    summary="Update documents",
+    responses={
+        200: {"model": SuccessResponse, "description": "Successful response"},
+        500: {
+            "model": ErrorResponse,
+            "description": "An unexpected error occurred. Please try again.",
+        },
+    },
+)
 async def update_documents(body: List[UpdateDocumentRequest]):
     try:
         docs = [doc.dict() for doc in body]
@@ -53,3 +83,18 @@ async def update_documents(body: List[UpdateDocumentRequest]):
         return ErrorResponse(
             message=f"An unexpected error occurred. Please try again later."
         )
+
+
+@router.delete(
+    "/documents/{id}",
+    summary="Remove document",
+    responses={
+        200: {"model": SuccessResponse, "description": "Successful response"},
+        500: {
+            "model": ErrorResponse,
+            "description": "An unexpected error occurred. Please try again.",
+        },
+    },
+)
+async def remove_document():
+    pass

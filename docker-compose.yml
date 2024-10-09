@@ -1,0 +1,9 @@
+services:
+  python-app:
+    build: backend
+    command: python app/main.py
+    environment:
+      DATABASE_URL: "sqlitecloud://<CHANGE_ME>.sqlite.cloud:8860?apikey=<CHANGE_ME>"
+      ORIGINS: "http://localhost:3000"
+    ports:
+      - "8000:8000"
