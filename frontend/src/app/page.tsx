@@ -44,7 +44,7 @@ export default function Home() {
         setIsSaving(true);
         setPreviousCardOrder(cardOrder);
 
-        let updateCards: UpdateCardProps[] = [];
+        const updateCards: UpdateCardProps[] = [];
         cardOrder.forEach((id, index) => {
           const card = cards.find((c) => c.id === id);
           if (card && card.position != index) {
@@ -65,7 +65,7 @@ export default function Home() {
             }
             return response.json();
           })
-          .then((data) => {
+          .then(() => {
             setLastSaveTime(Date.now());
           })
           .catch((error) => {
